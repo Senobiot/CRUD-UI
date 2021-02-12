@@ -1,11 +1,12 @@
 import './App.css';
 import { ControlPanel } from './Components/ControlPanel/ControlPanel'
-import { Input } from './Components/Input/Input'
+import { ThingContent } from './Components/ThingContent/ThingContent'
 
 function App() {
   return (
     <div className="App">
-      <Input />
+      
+      <ThingContent />
       {/* <ControlPanel /> */}
     </div>
   );
