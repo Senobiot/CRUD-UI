@@ -1,5 +1,6 @@
 export const cars = [
     'none',
+    'acura',
     'alfa',
     'aston',
     'audi',
@@ -26,6 +27,7 @@ export const cars = [
     'kia',
     'lancia',
     'land',
+    'lada',
     'lexus',
     'lincoln',
     'lotus',
