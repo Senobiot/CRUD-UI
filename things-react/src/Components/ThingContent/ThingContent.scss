@@ -17,22 +17,22 @@ $blinkColor: rgb(255, 94, 94);
     background-color: #2194E0;
 }
 
-body {
-    background-color:rgba(66, 188, 245, 0.2);
-}
 .spinner {
     width: 100px;
 }
+
 .wrapper {
     width: 60%;
     margin: 0 auto;
 }
+
 .warning {
     background-color: $blinkColor;
     color: $textColor;
     margin-bottom: 10px;
-
+    text-align: center;
 }
+
 .popup {
     display: none;
     position: absolute;
@@ -49,16 +49,20 @@ body {
         
     }
 }
+
 .title, .stats {
+    text-align: center;
     background-color: $bgc;
     color: $textColor;
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 10px;
 }
+
 .stats {
     font-size: 1.2rem;
 }
+
 .header {
     display: flex;
     margin: 20px 0 10px;
@@ -100,11 +104,12 @@ body {
         }
     }
 }
-.subWrapper {
-    max-height: 800px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
+
+// .subWrapper {
+//     max-height: 800px;
+//     overflow-y: scroll;
+//     overflow-x: hidden;
+// }
 
 .thingTile {
     text-shadow: 1px 1px 2px #353232;
@@ -168,7 +173,6 @@ body {
     > div {
         &:nth-child(n+1) {
            padding: 5px 10px; 
-        //    overflow: hidden;
            &:focus {
             outline: none;
             box-shadow: inset 0 0 10px 0 #fff;
