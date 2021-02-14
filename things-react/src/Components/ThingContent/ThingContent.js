@@ -7,6 +7,8 @@ export class ThingContent extends Component{
     constructor(props){
         super(props);
         this.state = {
+            carsOptions: [],
+            petsOptions: [],
             start: null,
             end: null,
             error: null,
@@ -111,7 +113,30 @@ export class ThingContent extends Component{
             }
         }
 
+        carPopup(e) {
+            if (e.target.contentEditable === 'true') {
+                    this.setState({carsOptions: cars});
+                    e.target.childNodes[1].className = 'popup active'; 
+            }
+        }
+
+        petPopup(e) {
+            if (e.target.contentEditable === 'true') {
+                this.setState({petsOptions: pets});
+                e.target.childNodes[1].className = 'popup active';
+            }
+        }
+
+        selectOption(e) {
+            if (e.target.tagName === 'OPTION') {
+                e.target.parentNode.className = 'popup';
+                e.target.parentNode.parentNode.childNodes[0].textContent = e.target.textContent;
+            }
+        }
+
         changeData(e) {
+            this.setState({carsOptions: [], petsOptions: []});
+
             if (this.currentEdition && this.currentEdition !== e.target.parentNode) {
                 this.currentEdition.className = 'thingTile green';
                 this.currentEdition.className = 'thingTile green blink';
@@ -127,8 +152,8 @@ export class ThingContent extends Component{
 
             const parent = e.target.parentNode;
             const nameFileld = e.target.parentNode.childNodes[1];
-            const carField = e.target.parentNode.childNodes[3];
-            const petField = e.target.parentNode.childNodes[5];
+            const carField = e.target.parentNode.children[3];
+            const petField = e.target.parentNode.children[5];
 
             if (nameFileld.contentEditable === 'true') {
                 parent.className = 'thingTile'
@@ -137,8 +162,8 @@ export class ThingContent extends Component{
                 nameFileld.contentEditable = 'inherit';
                 const data = {
                     name: nameFileld.textContent,
-                    car: carField.textContent,
-                    pet: petField.textContent
+                    car: carField.childNodes[0].textContent,
+                    pet: petField.childNodes[0].textContent
                 }
                 this.currentEdition = null;
                 e.target.className = 'changeBtn';
@@ -168,19 +193,19 @@ export class ThingContent extends Component{
                 {
                     isLoaded ? <div className='header'>
                     <input type='search' placeholder='Add new thing name...' ref={this.send}></input>
-                    <select ref={this.carsRef} defaultValue={'DEFAULT'}>
+                    <select ref={this.carsRef} defaultValue={'none'}>
                         {cars.map((e, idx)=> {
                         if (idx === 0) {
-                            return <option key={idx} value="DEFAULT" disabled>Select own car</option>
+                            return <option key={idx} value="none" disabled>Select own car</option>
                         } else {
                             return  <option key={idx} value={e}>{e}</option>
                         }
                         })}
                     </select>
-                    <select ref={this.petRef} defaultValue={'DEFAULT'}>
+                    <select ref={this.petRef} defaultValue={'none'}>
                         {pets.map((e, idx)=> {
                         if (idx === 0) {
-                            return <option key={idx} value="DEFAULT" disabled>Select own pet</option>
+                            return <option key={idx} value="none" disabled>Select own pet</option>
                         } else {
                             return  <option key={idx} value={e}>{e}</option>
                         }
@@ -209,14 +234,24 @@ export class ThingContent extends Component{
                              alt='carLogo' 
                              src={process.env.PUBLIC_URL + `/cars_icons/${cars.indexOf(e.car.toLowerCase()) !== -1 ? e.car : 'none'}.svg`}/>
                         </div>
-                        <div onKeyPress={e => this.wrapForbid(e)}>{e.car === 'none' ? '---' : !e.car ?  '---' : e.car}</div>
+                        <div onClick={e => this.carPopup(e)} onKeyPress={e => this.wrapForbid(e)}>
+                             {e.car === 'none' ? '---' : !e.car ?  '---' : e.car}
+                             <select size='5' className={'popup'} onClick={e => this.selectOption(e)}>
+                                 {this.state.carsOptions.map((e,idx)=> <option key={idx}>{e}</option>)}
+                            </select>
+                        </div>
                         <div>
                             <img className={'petLogo'} 
                             alt='petLogo' 
                             src={process.env.PUBLIC_URL + `/animals_icons/${pets.indexOf(
                                 e.pet ? e.pet.toLowerCase() : null) !== -1 ? e.pet : 'none'}.svg`}/>
                         </div>
-                        <div onKeyPress={e => this.wrapForbid(e)}>{e.pet === 'none' ? '---' : !e.pet ?  '---' : e.pet}</div>
+                        <div onClick={e => this.petPopup(e)} onKeyPress={e => this.wrapForbid(e)}>
+                            {e.pet === 'none' ? '---' : !e.pet ?  '---' : e.pet}
+                            <select size='5' className={'popup'} onClick={e => this.selectOption(e)}>
+                                 {this.state.petsOptions.map((e,idx)=> <option key={idx}>{e}</option>)}
+                            </select>
+                        </div>
                         <div className={'changeBtn'} onClick={e => this.changeData(e)} data={e.id}></div>
                         <div className={'deleteBtn'} onClick={e => this.deleteData(e)} data={e.id}></div>
                     </div>) : <img src={Spinner} alt='spinner'/>
