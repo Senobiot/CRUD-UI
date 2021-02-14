@@ -4,9 +4,7 @@ import { ThingContent } from './Components/ThingContent/ThingContent'
 function App() {
   return (
     <div className="App">
-      
       <ThingContent />
-      {/* <ControlPanel /> */}
     </div>
   );
 }
