@@ -97,6 +97,15 @@ export class ThingContent extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          response.json().then((data) => this.setState({ status: data.msg }));
+          this.setState({ error: true });
+          return;
+        }
+      })
       .then((response) => this.setState({ isLoaded: true }))
       .then((response) => this.getData())
       .then(this.setState({ status: 'Put data success in' }));
