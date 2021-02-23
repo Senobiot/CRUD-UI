@@ -91,7 +91,7 @@ export const pets = [
   'octopus',
   'ostrich',
   'owl',
-  'panda bea',
+  'panda bear',
   'parrot',
   'penguin',
   'pig',
