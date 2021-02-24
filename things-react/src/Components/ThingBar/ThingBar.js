@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { cars, pets } from '/';
 import { putData, deleteData } from '/';
+import { v4 as uuidv4 } from 'uuid';
 
 export const ThingBar = ({ app }) => {
   const { items, currEdit, editMode } = app.state;
@@ -44,7 +45,7 @@ export const ThingBar = ({ app }) => {
     <div className="subWrapper">
       {items.map((tile, index) => (
         <fieldset
-          key={index}
+          key={uuidv4()}
           className={'thingTile'}
           disabled={true}
           ref={(e) => (fieldsetRef.current[index] = e)}
@@ -63,13 +64,17 @@ export const ThingBar = ({ app }) => {
           </div>
           <select defaultValue={tile.car} onChange={changeCar}>
             {currEdit === index ? (
-              cars.map((e, idx) => (
-                <option key={idx} value={e} selected={e === tile.car.toLowerCase() ? true : false}>
+              cars.map((e) => (
+                <option
+                  key={uuidv4()}
+                  value={e}
+                  selected={e === tile.car.toLowerCase() ? true : false}
+                >
                   {e}
                 </option>
               ))
             ) : (
-              <option key={index} value={tile.car}>
+              <option key={uuidv4()} value={tile.car}>
                 {tile.car}
               </option>
             )}
@@ -88,9 +93,9 @@ export const ThingBar = ({ app }) => {
           </div>
           <select onChange={changePet} defaultValue={tile.pet}>
             {currEdit === index ? (
-              pets.map((e, idx) => (
+              pets.map((e) => (
                 <option
-                  key={idx}
+                  key={uuidv4()}
                   value={e}
                   selected={e === (tile.pet ? tile.pet.toLowerCase() : '') ? true : false}
                 >
@@ -98,7 +103,7 @@ export const ThingBar = ({ app }) => {
                 </option>
               ))
             ) : (
-              <option key={index} value={tile.pet}>
+              <option key={uuidv4()} value={tile.pet}>
                 {tile.pet}
               </option>
             )}

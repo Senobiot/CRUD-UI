@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { cars, pets } from '/';
 import { postData } from '/';
+import { v4 as uuidv4 } from 'uuid';
 
 export class Header extends Component {
   constructor(props) {
@@ -45,13 +46,13 @@ export class Header extends Component {
           {cars.map((e, idx) => {
             if (idx === 0) {
               return (
-                <option key={idx} value="none" disabled>
+                <option key={uuidv4()} value="none" disabled>
                   Select own car
                 </option>
               );
             } else {
               return (
-                <option key={idx} value={e}>
+                <option key={uuidv4()} value={e}>
                   {e}
                 </option>
               );
@@ -62,13 +63,13 @@ export class Header extends Component {
           {pets.map((e, idx) => {
             if (idx === 0) {
               return (
-                <option key={idx} value="none" disabled>
+                <option key={uuidv4()} value="none" disabled>
                   Select own pet
                 </option>
               );
             } else {
               return (
-                <option key={idx} value={e}>
+                <option key={uuidv4()} value={e}>
                   {e}
                 </option>
               );
