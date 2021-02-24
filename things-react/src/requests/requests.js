@@ -1,4 +1,4 @@
-import appConfig from '../../appConfig.json';
+import appConfig from '../appConfig.json';
 const API_URL = appConfig.SERVER_URL;
 
 export const getData = async (app) => {
@@ -45,7 +45,7 @@ export const deleteData = async (app, e) => {
   }
 };
 
-export const postData = async (app) => {
+export const postData = async (app, body) => {
   app.setState({
     editMode: false,
     currentEditableField: null,
@@ -55,17 +55,11 @@ export const postData = async (app) => {
     start: new Date().getTime(),
   });
 
-  const data = {
-    name: app.state.newThingName,
-    car: app.state.newThingCar,
-    pet: app.state.newThingPet,
-  };
-
   try {
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -86,6 +80,17 @@ export const postData = async (app) => {
 };
 
 export const putData = async (app, body, id) => {
+  if (Object.keys(body).length === 0) {
+    app.setState({
+      editMode: false,
+      currentEditableField: null,
+      status: 'Nothing changes',
+      start: new Date().getTime(),
+      end: new Date().getTime(),
+    });
+    return;
+  }
+
   app.setState({
     editMode: false,
     currentEditableField: null,

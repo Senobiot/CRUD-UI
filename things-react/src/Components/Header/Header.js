@@ -1,65 +1,82 @@
-import React from 'react';
-import { cars, pets } from '../../dataKeys/dataKeys';
-import { postData } from '../Requests';
+import React, { Component } from 'react';
+import { cars, pets } from '/';
+import { postData } from '/';
 
-export const Header = ({ app }) => {
-  const postRequest = () => postData(app);
+export class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      car: 'none',
+      pet: 'none',
+    };
+    this.handleName = this.handleName.bind(this);
+    this.handleCar = this.handleCar.bind(this);
+    this.handlePet = this.handlePet.bind(this);
+    this.postRequest = this.postRequest.bind(this);
+  }
 
-  const handleName = (e) => {
-    app.setState({ newThingName: e.target.value });
-  };
+  handleName(e) {
+    this.setState({ name: e.target.value });
+  }
 
-  const handleCar = (e) => {
-    app.setState({ newThingCar: e.target.value });
-  };
+  handleCar(e) {
+    this.setState({ car: e.target.value });
+  }
 
-  const handlePet = (e) => {
-    app.setState({ newThingPet: e.target.value });
-  };
+  handlePet(e) {
+    this.setState({ pet: e.target.value });
+  }
 
-  return (
-    <div className="header">
-      <input
-        type="search"
-        placeholder="Add new thing name..."
-        value={app.state.newThingName}
-        onChange={handleName}
-      ></input>
-      <select value={app.state.newThingCar} onChange={handleCar}>
-        {cars.map((e, idx) => {
-          if (idx === 0) {
-            return (
-              <option key={idx} value="none" disabled>
-                Select own car
-              </option>
-            );
-          } else {
-            return (
-              <option key={idx} value={e}>
-                {e}
-              </option>
-            );
-          }
-        })}
-      </select>
-      <select value={app.state.newThingPet} onChange={handlePet}>
-        {pets.map((e, idx) => {
-          if (idx === 0) {
-            return (
-              <option key={idx} value="none" disabled>
-                Select own pet
-              </option>
-            );
-          } else {
-            return (
-              <option key={idx} value={e}>
-                {e}
-              </option>
-            );
-          }
-        })}
-      </select>
-      <div className="addBtn" onClick={postRequest}></div>
-    </div>
-  );
-};
+  postRequest() {
+    postData(this.props.app, this.state);
+  }
+
+  render() {
+    return (
+      <div className="header">
+        <input
+          type="search"
+          placeholder="Add new thing name..."
+          value={this.state.name}
+          onChange={this.handleName}
+        ></input>
+        <select value={this.state.car} onChange={this.handleCar}>
+          {cars.map((e, idx) => {
+            if (idx === 0) {
+              return (
+                <option key={idx} value="none" disabled>
+                  Select own car
+                </option>
+              );
+            } else {
+              return (
+                <option key={idx} value={e}>
+                  {e}
+                </option>
+              );
+            }
+          })}
+        </select>
+        <select value={this.state.pet} onChange={this.handlePet}>
+          {pets.map((e, idx) => {
+            if (idx === 0) {
+              return (
+                <option key={idx} value="none" disabled>
+                  Select own pet
+                </option>
+              );
+            } else {
+              return (
+                <option key={idx} value={e}>
+                  {e}
+                </option>
+              );
+            }
+          })}
+        </select>
+        <div className="addBtn" onClick={this.postRequest}></div>
+      </div>
+    );
+  }
+}

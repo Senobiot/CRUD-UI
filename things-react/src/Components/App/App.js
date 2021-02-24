@@ -1,24 +1,20 @@
 import React, { Component } from 'react';
-import Spinner from '../../assets/spinner2.svg';
-import { getData } from '../Requests';
-import { Header } from '../Header';
-import { StatusBar } from '../StatusBar';
-import { ThingBar } from '../ThingBar';
+import { Spinner } from '/';
+import { getData } from '/';
+import { Header } from '/';
+import { StatusBar } from '/';
+import { ThingBar } from '/';
 import './App.scss';
 
 export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newThingName: '',
-      newThingCar: 'none',
-      newThingPet: 'none',
       start: null,
       end: null,
       error: null,
       status: null,
       isLoaded: false,
-      reload: false,
       items: null,
       editMode: false,
       currEdit: null,

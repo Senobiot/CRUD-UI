@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { cars, pets } from '../../dataKeys/dataKeys';
-import { putData, deleteData } from '../Requests/requests';
+import { cars, pets } from '/';
+import { putData, deleteData } from '/';
 
 export const ThingBar = ({ app }) => {
   const { items, currEdit, editMode } = app.state;
