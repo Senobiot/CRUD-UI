@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 export const ThingBar = ({ app }) => {
   const { items, currEdit, editMode } = app.state;
   const fieldsetRef = useRef([]);
-
   const body = {};
 
   const changeName = (e) => {
@@ -45,7 +44,7 @@ export const ThingBar = ({ app }) => {
     <div className="subWrapper">
       {items.map((tile, index) => (
         <fieldset
-          key={uuidv4()}
+          key={tile.id}
           className={'thingTile'}
           disabled={true}
           ref={(e) => (fieldsetRef.current[index] = e)}
