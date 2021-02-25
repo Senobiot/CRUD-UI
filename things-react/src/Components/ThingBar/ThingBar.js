@@ -1,121 +1,91 @@
-import React, { useRef } from 'react';
-import { cars, pets } from '/';
+import React, { Component } from 'react';
+import { ThingItem } from '/';
 import { putData, deleteData } from '/';
-import { v4 as uuidv4 } from 'uuid';
 
-export const ThingBar = ({ app }) => {
-  const { items, currEdit, editMode } = app.state;
-  const fieldsetRef = useRef([]);
-  const body = {};
+export class ThingBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: this.props.items,
+      newData: {},
+      editMode: false,
+      currEdit: null,
+    };
+    this.changeField = this.changeField.bind(this);
+    this.editItem = this.editItem.bind(this);
+    this.deleteRequest = this.deleteRequest.bind(this);
+    this.putRequest = this.putRequest.bind(this);
+  }
 
-  const changeName = (e) => {
-    body.name = e.target.value;
-  };
-
-  const changeCar = (e) => {
-    body.car = e.target.value;
-  };
-
-  const changePet = (e) => {
-    body.pet = e.target.value;
-  };
-
-  const deleteRequest = (e) => deleteData(app, e);
-
-  const changeData = (e) => {
-    if (editMode && currEdit !== +e.target.dataset.current) {
-      fieldsetRef.current[currEdit].className = 'thingTile green blink';
-      setTimeout(() => (fieldsetRef.current[currEdit].className = 'thingTile green'), 1000);
-    } else if (!editMode) {
-      const active = +e.target.dataset.current;
-      fieldsetRef.current[active].className = 'thingTile green';
-      e.target.className = 'sendChangeBtn';
-      app.setState({ currEdit: active, editMode: true });
-      fieldsetRef.current[active].disabled = false;
-    } else if (editMode && currEdit === +e.target.dataset.current) {
-      app.setState({ currEdit: null, editMode: false });
-      e.target.className = 'changeBtn';
-      fieldsetRef.current[e.target.dataset.current].className = 'thingTile';
-      putData(app, body, e.target.dataset.id);
+  async deleteRequest(id) {
+    const start = new Date().getTime();
+    const msg = 'Delete data success in';
+    try {
+      await deleteData(id);
+      await this.props.getAll(start, msg);
+    } catch (error) {
+      this.props.getAll(start, error, error);
     }
-  };
+  }
 
-  return (
-    <div className="subWrapper">
-      {items.map((tile, index) => (
-        <fieldset
-          key={tile.id}
-          className={'thingTile'}
-          disabled={true}
-          ref={(e) => (fieldsetRef.current[index] = e)}
-        >
-          <div>{tile.id}</div>
-          <input type="search" defaultValue={tile.name} onChange={changeName}></input>
-          <div>
-            <img
-              className={'carLogo'}
-              alt="carLogo"
-              src={(
-                process.env.PUBLIC_URL +
-                `/cars_icons/${cars.indexOf(tile.car.toLowerCase()) !== -1 ? tile.car : 'none'}.svg`
-              ).toLowerCase()}
+  async putRequest(e, data) {
+    const start = new Date().getTime();
+    const msg = 'Put data success in';
+    try {
+      await putData(e, data);
+      await this.props.getAll(start, msg);
+    } catch (error) {
+      this.props.getAll(start, error, error);
+    }
+  }
+
+  editItem(index, id, e) {
+    if (index !== this.state.currEdit && this.state.editMode) {
+      const items = this.state.items;
+      items[this.state.currEdit].blink = true;
+      this.setState({ items: items });
+      return;
+    }
+    if (index === this.state.currEdit && this.state.editMode) {
+      const items = this.state.items;
+      items[index].edit = false;
+      items[index].blink = false;
+      e.target.className = 'changeBtn';
+      this.setState({ items: items, editMode: false, currEdit: null });
+      this.putRequest(id, this.state.newData);
+      return;
+    }
+    e.target.className = 'sendChangeBtn';
+    const items = this.state.items;
+    items[index].edit = true;
+    this.setState({ editMode: true, currEdit: index, items: items });
+  }
+
+  changeField(index, fieldName, e) {
+    const items = this.state.items;
+    const newData = {};
+    items[index][fieldName] = e.target.value;
+    newData[fieldName] = e.target.value;
+    this.setState({ newData: newData, items: items });
+  }
+
+  render() {
+    return (
+      <div className="subWrapper">
+        {this.state.items.map((item, index) => {
+          return (
+            <ThingItem
+              key={item.id}
+              index={index}
+              item={item}
+              changeField={this.changeField}
+              deleteRequest={this.deleteRequest}
+              editItem={this.editItem}
+              currEdit={this.state.currEdit}
             />
-          </div>
-          <select defaultValue={tile.car} onChange={changeCar}>
-            {currEdit === index ? (
-              cars.map((e) => (
-                <option
-                  key={uuidv4()}
-                  value={e}
-                  selected={e === tile.car.toLowerCase() ? true : false}
-                >
-                  {e}
-                </option>
-              ))
-            ) : (
-              <option key={uuidv4()} value={tile.car}>
-                {tile.car}
-              </option>
-            )}
-          </select>
-          <div>
-            <img
-              className={'petLogo'}
-              alt="petLogo"
-              src={(
-                process.env.PUBLIC_URL +
-                `/animals_icons/${
-                  pets.indexOf(tile.pet ? tile.pet.toLowerCase() : null) !== -1 ? tile.pet : 'none'
-                }.svg`
-              ).toLowerCase()}
-            />
-          </div>
-          <select onChange={changePet} defaultValue={tile.pet}>
-            {currEdit === index ? (
-              pets.map((e) => (
-                <option
-                  key={uuidv4()}
-                  value={e}
-                  selected={e === (tile.pet ? tile.pet.toLowerCase() : '') ? true : false}
-                >
-                  {e}
-                </option>
-              ))
-            ) : (
-              <option key={uuidv4()} value={tile.pet}>
-                {tile.pet}
-              </option>
-            )}
-          </select>
-          <div
-            className={'changeBtn'}
-            onClick={changeData}
-            data-id={tile.id}
-            data-current={index}
-          ></div>
-          <div className={'deleteBtn'} onClick={deleteRequest} data-id={tile.id}></div>
-        </fieldset>
-      ))}
-    </div>
-  );
-};
+          );
+        })}
+      </div>
+    );
+  }
+}

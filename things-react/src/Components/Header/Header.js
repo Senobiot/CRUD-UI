@@ -29,8 +29,15 @@ export class Header extends Component {
     this.setState({ pet: e.target.value });
   }
 
-  postRequest() {
-    postData(this.props.app, this.state);
+  async postRequest() {
+    const start = new Date().getTime();
+    const msg = 'Post data success in';
+    try {
+      await postData(this.state);
+      await this.props.getAll(start, msg);
+    } catch (error) {
+      this.props.getAll(start, error, error);
+    }
   }
 
   render() {
