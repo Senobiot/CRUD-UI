@@ -6,7 +6,7 @@ export class ThingItem extends Component {
   render() {
     return (
       <fieldset
-        key={this.props.item.id}
+        key={this.props.item._id}
         className={
           this.props.item.blink
             ? 'thingTile green blink'
@@ -16,7 +16,7 @@ export class ThingItem extends Component {
         }
         disabled={this.props.item.edit ? false : true}
       >
-        <div>{this.props.item.id}</div>
+        <div>{this.props.index + 1}</div>
         <input
           type="search"
           defaultValue={this.props.item.name}
@@ -96,11 +96,11 @@ export class ThingItem extends Component {
         </select>
         <div
           className={'changeBtn'}
-          onClick={this.props.editItem.bind(this, this.props.index, this.props.item.id)}
+          onClick={this.props.editItem.bind(this, this.props.index, this.props.item._id)}
         ></div>
         <div
           className={'deleteBtn'}
-          onClick={this.props.deleteRequest.bind(this, this.props.item.id)}
+          onClick={this.props.deleteRequest.bind(this, this.props.item._id)}
         ></div>
       </fieldset>
     );

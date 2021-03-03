@@ -96,7 +96,7 @@ body {
             box-shadow: inset 0 0 0 5px 5px rgba(21, 156, 228, 0.4);
         }
     }
-    .addBtn {
+    .sendBtn, .addBtn {
         cursor: pointer;
         width: 75px;
         height: 30px;
@@ -112,6 +112,19 @@ body {
         &:active {
             transform: translate(2px, 2px);
         }
+    }
+    .addBtn {
+        background: url('../../assets/add.svg') no-repeat 50%/contain;
+    }
+}
+
+.subWrapper {
+    overflow: hidden;
+    &.infinite {
+        max-height: 50vh;
+        scroll-behavior: smooth;
+        padding-bottom: 10px;
+        overflow-y: scroll;
     }
 }
 

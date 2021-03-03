@@ -83,7 +83,8 @@ export class Header extends Component {
             }
           })}
         </select>
-        <div className="addBtn" onClick={this.postRequest}></div>
+        <div className="addBtn"></div>
+        <div className="sendBtn" onClick={this.postRequest}></div>
       </div>
     );
   }

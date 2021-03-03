@@ -15,6 +15,7 @@ export class ThingBar extends Component {
     this.editItem = this.editItem.bind(this);
     this.deleteRequest = this.deleteRequest.bind(this);
     this.putRequest = this.putRequest.bind(this);
+    this.scrollWrapper = this.scrollWrapper.bind(this);
   }
 
   async deleteRequest(id) {
@@ -63,19 +64,34 @@ export class ThingBar extends Component {
 
   changeField(index, fieldName, e) {
     const items = this.state.items;
-    const newData = {};
+    const fieldData = this.state.newData;
     items[index][fieldName] = e.target.value;
-    newData[fieldName] = e.target.value;
-    this.setState({ newData: newData, items: items });
+    fieldData[fieldName] = e.target.value;
+    this.setState({ newData: fieldData, items: items });
+  }
+
+  scrollWrapper(e) { 
+      if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
+        this.props.scroll();
+      }
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.items !== prevProps.items) {
+      this.setState({ items: this.props.items })
+    }
   }
 
   render() {
     return (
-      <div className="subWrapper">
+      <div className={!this.props.infinite ? "subWrapper" : "subWrapper infinite"} onScroll={this.scrollWrapper}>
         {this.state.items.map((item, index) => {
+          if (index + 1 > this.props.limit && !this.props.infinite) {
+            return;
+          }
           return (
             <ThingItem
-              key={item.id}
+              key={item._id}
               index={index}
               item={item}
               changeField={this.changeField}

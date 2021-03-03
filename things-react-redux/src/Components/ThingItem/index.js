@@ -1,2 +1,2 @@
 export { ThingItem } from './ThingItem';
-export { cars, pets } from '../';
+export { cars, pets } from '..';
