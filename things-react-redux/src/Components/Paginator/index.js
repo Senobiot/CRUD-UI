@@ -1,2 +1,1 @@
 export { Paginator } from './Paginator';
-

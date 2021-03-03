@@ -19,24 +19,24 @@ export class App extends Component {
     this.getDataScroll = this.getDataScroll.bind(this);
   }
 
-  changeLimit(newLimit){
+  changeLimit(newLimit) {
     this.setState({ limit: newLimit });
   }
 
-  infniteScroll(){
+  infniteScroll() {
     this.setState({ isInifnite: !this.state.isInifnite });
   }
 
-  async getDataScroll(){
+  async getDataScroll() {
     if (this.state.items.length >= this.state.dbSize) {
       return;
     }
     try {
       let response = await getData(this.state.scrollPage + 1);
-      response.splice(-1,1);
+      response.splice(-1, 1);
       this.setState({
         items: this.state.items.concat(response),
-        scrollPage: this.state.scrollPage + 1
+        scrollPage: this.state.scrollPage + 1,
       });
     } catch (error) {
       this.setState({ items: [], isLoaded: true, error: true, status: error });
@@ -53,7 +53,7 @@ export class App extends Component {
     try {
       const startTime = external ? external : new Date().getTime();
       let response = await getData(page, restart ? 10 : this.state.limit);
-      const { CollectionSize } = response.splice(-1,1)[0];
+      const { CollectionSize } = response.splice(-1, 1)[0];
       this.setState({
         dbSize: CollectionSize,
         items: response,
@@ -66,7 +66,6 @@ export class App extends Component {
         currEdit: null,
         scrollPage: 1,
       });
-
     } catch (error) {
       this.setState({ items: [], isLoaded: true, error: true, status: error });
     }
@@ -84,8 +83,22 @@ export class App extends Component {
           <>
             <Header getAll={this.getAll} />
             <StatusBar state={this.state} />
-            <Paginator size={this.state.dbSize} infniteScroll={this.infniteScroll} getPage={this.getAll} activePage={this.state.page} changeLimit={this.changeLimit} infinite={this.state.isInifnite} currentLimit={this.state.limit}/>
-            <ThingBar getAll={this.getAll} items={this.state.items} limit={this.state.limit} infinite={this.state.isInifnite} scroll={this.getDataScroll}/>
+            <Paginator
+              size={this.state.dbSize}
+              infniteScroll={this.infniteScroll}
+              getPage={this.getAll}
+              activePage={this.state.page}
+              changeLimit={this.changeLimit}
+              infinite={this.state.isInifnite}
+              currentLimit={this.state.limit}
+            />
+            <ThingBar
+              getAll={this.getAll}
+              items={this.state.items}
+              limit={this.state.limit}
+              infinite={this.state.isInifnite}
+              scroll={this.getDataScroll}
+            />
           </>
         ) : (
           <img src={Spinner} alt="spinner" />

@@ -2,10 +2,14 @@ import appConfig from '../appConfig.json';
 const API_URL = appConfig.SERVER_URL;
 
 export const getData = async (page, limit) => {
-  const params = !page && !limit ? undefined :
-  page && !limit ? `?page=${page}` :
-  !page && limit ? `?limit=${page}` :
-  `?page=${page}(&limit=${limit})`;
+  const params =
+    !page && !limit
+      ? undefined
+      : page && !limit
+      ? `?page=${page}`
+      : !page && limit
+      ? `?limit=${page}`
+      : `?page=${page}(&limit=${limit})`;
   try {
     const response = await fetch(params ? API_URL + params : API_URL);
     if (!response.ok) {

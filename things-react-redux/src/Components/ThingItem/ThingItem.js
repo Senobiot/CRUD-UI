@@ -94,14 +94,53 @@ export class ThingItem extends Component {
             </option>
           )}
         </select>
+        <div className="infoBtn" onClick={this.props.infoItem.bind(this, this.props.index)}></div>
         <div
-          className={'changeBtn'}
+          className="changeBtn"
           onClick={this.props.editItem.bind(this, this.props.index, this.props.item._id)}
         ></div>
         <div
-          className={'deleteBtn'}
+          className="deleteBtn"
           onClick={this.props.deleteRequest.bind(this, this.props.item._id)}
         ></div>
+        <div
+          className={this.props.currEdit === this.props.index ? 'addBtn' : 'addBtn hidden'}
+          onClick={this.props.addingModeHandler}
+        ></div>
+        <div className={this.props.item.info ? 'expand' : 'collapse'}>
+          <div>
+            <b>ID</b>: {this.props.item._id}
+          </div>
+          {this.props.item.custom && !this.props.addingMode ? (
+            Object.keys(this.props.item.custom).map((field, idx) => {
+              return (
+                <div key={field}>
+                  <div className="fieldName">
+                    Field {idx + 1} : {field}
+                  </div>
+                  <input
+                    type="search"
+                    defaultValue={this.props.item.custom[field]}
+                    onChange={this.props.changeCustomField.bind(this, this.props.index, field)}
+                  ></input>
+                </div>
+              );
+            })
+          ) : this.props.addingMode ? (
+            <div className="editWrapper">
+              <input
+                type="search"
+                defaultValue={'Enter Field Name'}
+                onChange={this.props.changeNewField}
+              ></input>
+              <div className="cancelBtn" onClick={this.props.addingModeHandler}></div>
+              <div
+                className="applyBtn"
+                onClick={this.props.addCustomField.bind(this, this.props.index)}
+              ></div>
+            </div>
+          ) : null}
+        </div>
       </fieldset>
     );
   }
