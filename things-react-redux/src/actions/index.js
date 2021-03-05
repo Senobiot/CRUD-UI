@@ -15,7 +15,7 @@ export function postRequest(data) {
     data: data,
     label: POST_ITEM,
     onSuccess: msg,
-    onFailure: errorResponse
+    onFailure: errorResponse,
   });
 }
 
@@ -24,7 +24,7 @@ export function deleteRequest(id) {
     id: id,
     data: null,
     label: DELETE_ITEM,
-    onFailure: errorResponse
+    onFailure: errorResponse,
   });
 }
 
@@ -33,21 +33,21 @@ export function putRequest(id, data) {
     data: data,
     id: id,
     label: PUT_ITEM,
-    onFailure: errorResponse
+    onFailure: errorResponse,
   });
 }
 
 export function setItems(data) {
   return {
     type: SET_ITEMS,
-    payload: data
+    payload: data,
   };
 }
 
 export function errorResponse(data) {
   return {
     type: ERROR,
-    payload: data
+    payload: data,
   };
 }
 
@@ -58,7 +58,7 @@ function getAction({
   id = null,
   onSuccess = () => {},
   onFailure = () => {},
-  label
+  label,
 }) {
   return {
     type: API,
@@ -69,7 +69,7 @@ function getAction({
       data,
       onSuccess,
       onFailure,
-      label
-    }
+      label,
+    },
   };
 }
