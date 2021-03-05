@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { cars, pets } from '/';
-import { postData } from '/';
 import { PopupHeader } from '/';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -67,13 +66,9 @@ export class Header extends Component {
     const msg = 'Post data success in';
     let newThing = {...this.state}
     delete newThing.popup;
-
-    try {
-      await postData(newThing);
-      await this.props.getAll(start, msg);
-    } catch (error) {
-      this.props.getAll(start, error, error);
-    }
+    
+    await this.props.postRequest(newThing);
+    await this.props.getAll(start, msg);
   }
 
   render() {

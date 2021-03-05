@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import { Spinner } from '/';
-import { getData } from '/';
 import { Header } from '/';
 import { StatusBar } from '/';
 import { Paginator } from '/';
 import { ThingBar } from '/';
 import './App.scss';
+import { connect } from 'react-redux';
+import { getRequest, postRequest, deleteRequest, putRequest } from '/';
 
-export class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isInifnite: false,
+      status: this.props.msg
     };
     this.getAll = this.getAll.bind(this);
     this.changeLimit = this.changeLimit.bind(this);
@@ -30,34 +32,38 @@ export class App extends Component {
   async getDataScroll() {
     if (this.state.items.length >= this.state.dbSize) {
       return;
-    }
-    try {
-      let response = await getData(this.state.scrollPage + 1);
-      response.splice(-1, 1);
+    } 
+    await this.props.getRequest(this.state.scrollPage + 1);
+
+    this.props.data.splice(-1, 1);
+
       this.setState({
-        items: this.state.items.concat(response),
+        items: this.state.items.concat(this.props.data),
         scrollPage: this.state.scrollPage + 1,
       });
-    } catch (error) {
-      this.setState({ items: [], isLoaded: true, error: true, status: error });
-    }
   }
 
   async getAll(external, msg, error, page = 1, restart) {
-    this.setState({ isLoaded: false, page: page });
+    if (this.props.error) {
+      this.setState({status: this.props.error, error: true })
+      // return;
+    }
+    this.setState({ page: page, isLoaded: false });
+    const startTime = external ? external : new Date().getTime();
 
+    await this.props.getRequest(page, restart ? 10 : this.state.limit);
+    
     if (error) {
       this.setState({ isLoaded: true, error: true, status: error });
       return;
     }
-    try {
-      const startTime = external ? external : new Date().getTime();
-      let response = await getData(page, restart ? 10 : this.state.limit);
+
+      let response =  this.props.data;
       const { CollectionSize } = response.splice(-1, 1)[0];
       this.setState({
         dbSize: CollectionSize,
+        isLoaded: this.props.isLoaded,
         items: response,
-        isLoaded: true,
         status: msg ? msg : 'Get data success in',
         start: startTime,
         end: new Date().getTime(),
@@ -66,13 +72,16 @@ export class App extends Component {
         currEdit: null,
         scrollPage: 1,
       });
-    } catch (error) {
-      this.setState({ items: [], isLoaded: true, error: true, status: error });
-    }
   }
 
   async componentDidMount() {
     await this.getAll();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.error !== prevProps.error) {
+      this.setState({ error: this.props.error, status: this.props.error });
+    }
   }
 
   render() {
@@ -81,7 +90,7 @@ export class App extends Component {
         <header className="title">Things BE UI Task</header>
         {this.state.isLoaded ? (
           <>
-            <Header getAll={this.getAll} />
+            <Header postRequest={this.props.postRequest} getAll={this.getAll} error={this.state.error}/>
             <StatusBar state={this.state} />
             <Paginator
               size={this.state.dbSize}
@@ -96,8 +105,11 @@ export class App extends Component {
               getAll={this.getAll}
               items={this.state.items}
               limit={this.state.limit}
+              deleteRequest={this.props.deleteRequest}
+              putRequest={this.props.putRequest}
               infinite={this.state.isInifnite}
               scroll={this.getDataScroll}
+              error={this.state.error}
             />
           </>
         ) : (
@@ -107,3 +119,11 @@ export class App extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ data = [], isLoaded = false, error = '' }) => ({
+  data,
+  error,
+  isLoaded
+});
+
+export default connect( mapStateToProps, { getRequest, postRequest, deleteRequest, putRequest } )(App);

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { ThingItem } from '/';
-import { putData, deleteData } from '/';
 
 export class ThingBar extends Component {
   constructor(props) {
@@ -28,23 +27,17 @@ export class ThingBar extends Component {
   async deleteRequest(id) {
     const start = new Date().getTime();
     const msg = 'Delete data success in';
-    try {
-      await deleteData(id);
-      await this.props.getAll(start, msg);
-    } catch (error) {
-      this.props.getAll(start, error, error);
-    }
+
+    await this.props.deleteRequest(id);
+    await this.props.getAll(start, msg);
   }
 
   async putRequest(e, data) {
     const start = new Date().getTime();
     const msg = 'Put data success in';
-    try {
-      await putData(e, data);
-      await this.props.getAll(start, msg);
-    } catch (error) {
-      this.props.getAll(start, error, error);
-    }
+
+    await this.props.putRequest(e, data);
+    await this.props.getAll(start, msg);
   }
 
   infoItem(index) {
