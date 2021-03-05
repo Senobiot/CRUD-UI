@@ -29,7 +29,9 @@ export class ThingBar extends Component {
     const msg = 'Delete data success in';
 
     await this.props.deleteRequest(id);
-    await this.props.getAll(start, msg);
+    if (!this.props.error) {
+      await this.props.getAll(start, msg);
+    }
   }
 
   async putRequest(e, data) {
@@ -37,7 +39,9 @@ export class ThingBar extends Component {
     const msg = 'Put data success in';
 
     await this.props.putRequest(e, data);
-    await this.props.getAll(start, msg);
+    if (!this.props.error) {
+      await this.props.getAll(start, msg);
+    }
   }
 
   infoItem(index) {

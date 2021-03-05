@@ -46,7 +46,6 @@ class App extends Component {
   async getAll(external, msg, error, page = 1, restart) {
     if (this.props.error) {
       this.setState({ status: this.props.error, error: true });
-      // return;
     }
     this.setState({ page: page, isLoaded: false });
     const startTime = external ? external : new Date().getTime();

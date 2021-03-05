@@ -6,7 +6,7 @@ export function getRequest(page, limit) {
     limit: limit,
     label: GET_ALL,
     onSuccess: setItems,
-    onFailure: (error) => error,
+    onFailure: msgResponse,
   });
 }
 
@@ -14,8 +14,8 @@ export function postRequest(data) {
   return getAction({
     data: data,
     label: POST_ITEM,
-    onSuccess: msg,
-    onFailure: errorResponse,
+    onSuccess: msgResponse,
+    onFailure: msgResponse,
   });
 }
 
@@ -24,7 +24,8 @@ export function deleteRequest(id) {
     id: id,
     data: null,
     label: DELETE_ITEM,
-    onFailure: errorResponse,
+    onSuccess: msgResponse,
+    onFailure: msgResponse,
   });
 }
 
@@ -33,7 +34,8 @@ export function putRequest(id, data) {
     data: data,
     id: id,
     label: PUT_ITEM,
-    onFailure: errorResponse,
+    onSuccess: msgResponse,
+    onFailure: msgResponse,
   });
 }
 
@@ -44,7 +46,7 @@ export function setItems(data) {
   };
 }
 
-export function errorResponse(data) {
+export function msgResponse(data) {
   return {
     type: ERROR,
     payload: data,

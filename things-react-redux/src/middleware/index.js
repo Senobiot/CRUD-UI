@@ -43,7 +43,9 @@ const customMiddleware = ({ dispatch }) => (next) => async (action) => {
       if (!response.ok) {
         const error = (await response.json()).msg;
         dispatch(onFailure(error));
+        return;
       }
+      dispatch(onSuccess(false));
     } catch (error) {
       dispatch(onFailure(error));
     }
@@ -56,16 +58,18 @@ const customMiddleware = ({ dispatch }) => (next) => async (action) => {
       if (!response.ok) {
         const error = (await response.json()).msg;
         dispatch(onFailure(error));
+        return;
       }
+      dispatch(onSuccess(false));
     } catch (error) {
       dispatch(onFailure(error));
     }
   }
 
   if (label === 'PUT_ITEM') {
-    console.log(Object.keys(data).length === 0);
     if (Object.keys(data).length === 0) {
       dispatch(onFailure('Nothing changes'));
+      return;
     }
     try {
       const response = await fetch(`${API_URL}${id}`, {
@@ -77,7 +81,9 @@ const customMiddleware = ({ dispatch }) => (next) => async (action) => {
       if (!response.ok) {
         const error = (await response.json()).msg;
         dispatch(onFailure(error));
+        return;
       }
+      dispatch(onSuccess(false));
     } catch (error) {
       dispatch(onFailure(error));
     }

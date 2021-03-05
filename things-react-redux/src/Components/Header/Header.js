@@ -54,7 +54,6 @@ export class Header extends Component {
 
   openPopup() {
     this.setState({ popup: true });
-    console.log(this.state);
   }
 
   closePopup() {
@@ -68,7 +67,9 @@ export class Header extends Component {
     delete newThing.popup;
     
     await this.props.postRequest(newThing);
-    await this.props.getAll(start, msg);
+    if (!this.props.error) {
+      await this.props.getAll(start, msg);
+    }
   }
 
   render() {
